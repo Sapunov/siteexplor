@@ -1,0 +1,41 @@
+#!/usr/bin/env python
+"""
+Sitexplor application
+"""
+
+import argparse
+import sys
+
+from sitexplor import retriever
+
+reload(sys)
+sys.setdefaultencoding("utf-8")
+
+
+parser = argparse.ArgumentParser(description="Links retriever")
+parser.add_argument("url", help="Site url")
+parser.add_argument(
+    "--debug",
+    action="store_true",
+    help="Debug mode"
+)
+parser.add_argument(
+    "-p", "--processes",
+    type=int,
+    help="Number of processes"
+)
+
+
+if __name__ == "__main__":
+    args = parser.parse_args()
+    if args.url is not None:
+        try:
+            retriever = retriever.Retriever(
+                args.url, n_proc=args.processes,
+                debug=args.debug
+            )
+            retriever.multi()
+        except KeyboardInterrupt:
+            retriever.stop()
+    else:
+        parser.print_help()
